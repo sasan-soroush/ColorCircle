@@ -13,7 +13,9 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
+    var timer = Timer()
+
     var topIndex : Int = 0
     var ballIndex : Int = 0
     var score : Int = 0
@@ -65,6 +67,15 @@ class ViewController: UIViewController {
     
     // Properties UI
     
+    let retryButton : UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        button.setTitle("RETRY", for: UIControlState.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 35, weight: UIFont.Weight.light)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(retryBtnTapped), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
     let scoreLabel : UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -102,7 +113,8 @@ class ViewController: UIViewController {
     }
     
     private func makeBallFall() {
-        var _ = Timer.scheduledTimer(  timeInterval: 3,
+        ball.alpha = 1
+        timer = Timer.scheduledTimer(  timeInterval: 3,
                                        target: self,
                                        selector: #selector(ballFall),
                                        userInfo: nil,
@@ -146,7 +158,15 @@ class ViewController: UIViewController {
                 self.scoreLabel.text = "0"
                 UIView.animate(withDuration: 1, animations: {
                     self.ball.frame = CGRect(x: 50, y: self.view.frame.height/8, width: self.view.frame.width-100, height: self.view.frame.height/8)
+                    self.ball.backgroundColor = UIColor.init(rgb: 0x75C8AE)
+                    self.view.backgroundColor = UIColor.init(rgb: 0xe57364)
+                    self.timer.invalidate()
+
                 }, completion: { (animated) in
+                    
+                    self.view.addSubview(self.retryButton)
+                    self.retryButton.frame = self.ball.frame
+                    self.retryButton.layer.cornerRadius = 12.5
                     
                 })
             }
@@ -161,6 +181,20 @@ class ViewController: UIViewController {
         let randomNumber = arc4random_uniform(7)
         ballIndex = Int(randomNumber)
         ball.backgroundColor = self.colors[Int(randomNumber)]
+    }
+    
+    @objc private func retryBtnTapped() {
+        UIView.animate(withDuration: 0.5, animations: {
+            
+            self.retryButton.removeFromSuperview()
+            self.ball.frame = CGRect(x: self.view.frame.width/2 - 12.5, y: self.view.frame.height/16, width: 25, height: 25)
+            self.view.backgroundColor = UIColor.init(rgb: 0xffecb4)
+            
+        }) { (animated) in
+            
+            self.makeBallFall()
+            
+        }
     }
     
     private func setupView() {
