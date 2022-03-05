@@ -19,17 +19,6 @@ class ViewController: UIViewController {
     var topIndex : Int = 0
     var ballIndex : Int = 0
     var score : Int = 0
-    
-    let colors : [UIColor] = [
-        UIColor(rgb: 0xFC31AB) ,
-        UIColor(rgb: 0xFC0E2A) ,
-        UIColor(rgb: 0xFEE551) ,
-        UIColor(rgb: 0x1EA7E9) ,
-        UIColor(rgb: 0x4BB328) ,
-        UIColor(rgb: 0x2DBFFC) ,
-        UIColor(rgb: 0x7E8082) ,
-        UIColor(rgb: 0xFDB637)
-    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -174,13 +163,14 @@ class ViewController: UIViewController {
     }
     
     private func makeBall() {
+        let randomNumber = arc4random_uniform(7)
+        let colors = Constants.Colors.all
         view.addSubview(ball)
         ball.alpha = 1
         ball.frame = CGRect(x: view.frame.width/2 - 12.5, y: view.frame.height/16, width: 25, height: 25)
         ball.layer.cornerRadius = 12.5
-        let randomNumber = arc4random_uniform(7)
         ballIndex = Int(randomNumber)
-        ball.backgroundColor = self.colors[Int(randomNumber)]
+        ball.backgroundColor = colors[Int(randomNumber)]
     }
     
     @objc private func retryBtnTapped() {
